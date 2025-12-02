@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QApplication
 from controller.main_controller import MainController
 from model.model import Model
 from view.MainWindow import MainWindow
+from view.PhysiqueWindow import PhysiqueQtWidget
 
 if __name__ == "__main__":
     def qt_exception_hook(exctype, value, tb):
@@ -15,10 +16,10 @@ if __name__ == "__main__":
     sys.excepthook = qt_exception_hook
 
     app = QApplication(sys.argv)
-    fenetre = MainWindow()
+    fenetre = PhysiqueQtWidget()
     model = Model()
     controller = MainController(fenetre,model)
-    fenetre.set_controller(controller)
+    #fenetre.set_controller(controller)
     fenetre.show()
 
 
