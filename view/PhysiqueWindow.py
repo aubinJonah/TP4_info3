@@ -1,3 +1,5 @@
+import math
+
 import pymunk
 from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QPixmap, QBrush, QPainter
@@ -35,6 +37,7 @@ class PhysiqueQtWidget(QWidget):
         self.size = (100,50)
         self.body = pymunk.Body(mass, pymunk.moment_for_box(mass, self.size))
         self.body.position = (200, 100)
+        self.angle = -math.degrees(self.body.angle)
         shape = pymunk.Poly.create_box(self.body)
         shape.elasticity = 0.8
         self.space.add(self.body, shape)
@@ -56,6 +59,7 @@ class PhysiqueQtWidget(QWidget):
         x = int(self.body.position.x)
         y = int(self.body.position.y)
         p.setBrush(Qt.GlobalColor.red)
+        p.rotate(self.angle)
         p.drawRect(x,y,self.size[0],self.size[1])
 
     def keyPressEvent(self, event):
@@ -73,7 +77,8 @@ class PhysiqueQtWidget(QWidget):
     def rotate_car(self,sens):
         if sens == "left":
             #self.body.apply_force_at_local_point((500,500),(self.size[0]/2,self.size[1]/2))
-            self.body.angle = self.body.angle + 1.5
+            self.body.torque = 100
+            self.angle = -math.degrees(self.body.angle)
         if sens == "right":
             #self.body.apply_force_at_local_point((500,500),(0,0))
             pass
