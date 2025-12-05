@@ -31,8 +31,8 @@ class PhysiqueQtWidget(QWidget):
         ground.friction = 1.0
         self.space.add(ground)
         # --- voiture -----------------------------------------------
-        mass = 5
-        self.size = (5,5)
+        mass = 1
+        self.size = (100,50)
         self.body = pymunk.Body(mass, pymunk.moment_for_box(mass, self.size))
         self.body.position = (200, 100)
         shape = pymunk.Poly.create_box(self.body)
@@ -54,6 +54,26 @@ class PhysiqueQtWidget(QWidget):
         p.drawRect(0,self.H - 50,self.W,50)
         # --- Dessine la voiture ---
         x = int(self.body.position.x)
-        y = int(self.H - self.body.position.y)
+        y = int(self.body.position.y)
         p.setBrush(Qt.GlobalColor.red)
-        p.drawRect(x,self.size[0],self.size[1],y)
+        p.drawRect(x,y,self.size[0],self.size[1])
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Up:
+            self.moveCar()
+        if event.key() == Qt.Key.Key_Left:
+            self.rotate_car("left")
+        if event.key() == Qt.Key.Key_Right:
+            self.rotate_car("right")
+
+
+    def moveCar(self):
+        self.body.apply_force_at_local_point((500,0),(0,0))
+
+    def rotate_car(self,sens):
+        if sens == "left":
+            #self.body.apply_force_at_local_point((500,500),(self.size[0]/2,self.size[1]/2))
+            self.body.angle = self.body.angle + 1.5
+        if sens == "right":
+            #self.body.apply_force_at_local_point((500,500),(0,0))
+            pass
