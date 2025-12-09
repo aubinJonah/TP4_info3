@@ -21,7 +21,7 @@ if __name__ == "__main__":
     fenetre = MainWindow()
     model = Model()
     physique = PhysiqueQtWidget()
-    canvas = GraphCanvas
+    canvas = GraphCanvas()
     graphView = GraphView()
     controller = MainController(fenetre,model,canvas,physique,graphView)
     #fenetre.set_controller(controller)
