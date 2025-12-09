@@ -16,7 +16,7 @@ class GraphCanvas(FigureCanvasQTAgg):
         # Crée une figure matplotlib
         self.fig, self.ax = plt.subplots(figsize=(10, 10))
         super().__init__(self.fig)
-        self.draw_graphe()
+        self.draw()
         if TYPE_CHECKING:
             self.__controller: MainController | None = None
         # Permet de faire fonctionner l'ecoute des touches dans un canvas

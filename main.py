@@ -5,6 +5,8 @@ from PyQt6.QtWidgets import QApplication
 
 from controller.main_controller import MainController
 from model.model import Model
+from view.Graph_Canvas import GraphCanvas
+from view.Graph_View import GraphView
 from view.MainWindow import MainWindow
 from view.PhysiqueWindow import PhysiqueQtWidget
 
@@ -16,9 +18,12 @@ if __name__ == "__main__":
     sys.excepthook = qt_exception_hook
 
     app = QApplication(sys.argv)
-    fenetre = PhysiqueQtWidget()
+    fenetre = MainWindow()
     model = Model()
-    controller = MainController(fenetre,model)
+    physique = PhysiqueQtWidget()
+    canvas = GraphCanvas
+    graphView = GraphView()
+    controller = MainController(fenetre,model,canvas,physique,graphView)
     #fenetre.set_controller(controller)
     fenetre.show()
 
