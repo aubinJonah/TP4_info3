@@ -26,8 +26,10 @@ class MainController:
         self.__canvas = canvas
         self.__physique = physique
         self.__graph_view = graph_view
+        self.worker = Worker(physique)
+        self.temps = 0
         self.__dock = dock
-        self.worker = Worker()
+
 
         self.__view.layout.addWidget(self.__physique)
         self.__graph_view.add_canvas(self.__canvas)
@@ -83,6 +85,27 @@ class MainController:
         self.__view.RedemarrerpushButton.setEnabled(False)
         self.__physique.redemarrer_simulation()
 
+        self.__physique.info_graph.connect(self.update_graph)
+
+    def changement_vitesse(self, vitesse):
+        self.__view.update_compteur_vitesse(vitesse)
+
+        self.ajouter_donnees(vitesse)
+        self.__canvas.line.set_xdata(self.__canvas.temps)
+        self.__canvas.line.set_ydata(self.__canvas.donnees)
+        self.__canvas.ax.set_xlim(min(self.__canvas.temps), max(self.__canvas.temps))
+        self.__canvas.ax.set_ylim(min(self.__canvas.donnees), max(self.__canvas.donnees))
+        self.__canvas.draw()
+        self.__canvas.flush_events()
+        sleep(0.0002)
+
+    def ajouter_donnees(self, donnee_a_ajouter):
+        self.__canvas.temps.append(self.temps + 0.017)
+        self.__canvas.donnees.append(donnee_a_ajouter)
+        if len(self.__canvas.temps) > 50:
+            self.__canvas.temps[:] = self.__canvas.temps[1:]
+            self.__canvas.donnees[:] = self.__canvas.donnees[1:]
+
     def ajouter_graphique(self):
         self.__graph_view.show()
 
@@ -90,19 +113,26 @@ class MainController:
         self.worker.temps_passer.connect(self.update_graph)
         self.worker.start()
 
-    def update_graph(self,temps):
-        self.__canvas.borne_sup += 1
-        self.__canvas.draw_vitesse()
-        print(f"temps écoulé : {temps}")
+    def update_graph(self, position_x, position_y, vitesse):
+        # self.__canvas.borne_sup += 1
+        self.__canvas.draw_vitesse(vitesse)
+
 
 class Worker(QThread):
     temps_passer = pyqtSignal(int)
     temps = 0
-    en_cours :bool
+    en_cours: bool
+    __physique: PhysiqueQtWidget
+
+    def __init__(self, physique):
+        super().__init__()
+        self.__physique = physique
+
     def run(self):
         # TODO
         self.en_cours = True
         while self.en_cours:
             sleep(1)
-            self.temps += 1
-            self.temps_passer.emit(self.temps)
+            # self.temps += 1
+            # self.temps_passer.emit(self.temps)
+            self.__physique.envoyer_signal_graph()
