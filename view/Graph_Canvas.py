@@ -35,31 +35,9 @@ class GraphCanvas(FigureCanvasQTAgg):
         self.__controller = controller
 
     def draw_graph(self):
-        self.ax.clear()
-        # Trace la fonction
-        x = np.linspace(self.borne_inf, self.borne_sup, 100)
-        y = np.sin(x)
-        # self.ax.plot(x, y)
+        plt.ion()
 
-        self.draw()
-
-    def draw_vitesse(self, vitesse):
-        self.line, = self.ax.plot(self.temps, vitesse, "r")
-
-        self.ax.clear()
-        # Trace la fonction
-        #x = np.linspace(self.borne_inf, self.borne_sup, 1)
-        #y = vitesse
-        #self.ax.plot(x, y)
-
-        while True:
-            self.__controller.ajouter_donnees()
-            self.line.set_xdata(self.temps)
-            self.line.set_ydata(self.donnees)
-            self.ax.set_xlim(min(self.temps),max(self.temps))
-            self.ax.set_ylim(min(self.donnees), max(self.donnees))
-            self.draw()
-            self.flush_events()
-            self.sleep(0.0002)
-
+        self.line, = self.ax.plot(self.temps, self.donnees, "r")
+        self.ax.set_xlim(0,5)
+        self.ax.set_ylim(0, 250)
         self.draw()

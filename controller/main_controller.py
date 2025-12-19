@@ -35,13 +35,16 @@ class MainController:
         self.__graph_view.add_canvas(self.__canvas)
 
         self.__view.action_ajouter.triggered.connect(self.ajouter_graphique)
+
         # Bouton de gestion de la simulation
         self.__view.StartpushButton.clicked.connect(self.gestion_commencer)
         self.__view.PausepushButton.clicked.connect(self.gestion_pause)
         self.__view.RedemarrerpushButton.clicked.connect(self.gestion_redemarrer)
+
         # Bouton des choix de graphes
         self.__graph_view.VitesseButton.clicked.connect(self.graphVitesse)
         self.__graph_view.AccelerationButton.clicked.connect(self.graphAcceleration)
+
         # mettre a jour compteur de vitesse
         self.__physique.vitesse_signal.connect(self.changement_vitesse)
 
@@ -121,10 +124,12 @@ class MainController:
         self.__graph_view.show()
 
     def reset_graph(self):
+        self.temps = 0
         self.__canvas.temps.clear()
         self.__canvas.donnees.clear()
         self.__canvas.line, = self.__canvas.ax.plot(self.__canvas.temps, self.__canvas.donnees, "r")
-
+        self.__canvas.ax.clear()
+        self.__canvas.draw_graph()
 
     def graphVitesse(self):
         self.reset_graph()
