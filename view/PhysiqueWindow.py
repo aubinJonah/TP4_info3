@@ -51,6 +51,14 @@ class PhysiqueQtWidget(QWidget):
             mur.friction = 1.0
             self.space.add(mur)
 
+        #les tonneaux
+        self.tonneaux = []
+
+        #Ajouter des tonneaux
+        positions_tonneaux = [(150, 150), (450, 150), (300, 100)]
+        for pos in positions_tonneaux:
+            self.creer_tonneau(pos)
+
         # la voiture
         mass = 1
         self.size = (100,50)
@@ -62,6 +70,20 @@ class PhysiqueQtWidget(QWidget):
         shape.elasticity = 0.8
         self.space.add(self.body, shape)
 
+    def creer_tonneau(self, position):
+        masse_tonneau = 0.5
+        rayon = 25
+        # Calcul du moment pour un cercle
+        moment = pymunk.moment_for_circle(masse_tonneau, 0, rayon)
+        body = pymunk.Body(masse_tonneau, moment)
+        body.position = position
+
+        shape = pymunk.Circle(body, rayon)
+        shape.elasticity = 0.5
+        shape.friction = 0.5
+
+        self.space.add(body, shape)
+        self.tonneaux.append(body)
 
     def update_simulation(self):
 
@@ -78,6 +100,11 @@ class PhysiqueQtWidget(QWidget):
         #simule la friction de l'air sur la voiture et diminiue la vitesse de celle-ci pour chaque mise à jour
         self.body.velocity *= self.surface
         self.body.angular_velocity *= 0.90
+        #simule la friction de l'air pour les tonneaux
+        for tonneau in self.tonneaux:
+            tonneau.velocity *= self.surface
+            tonneau.angular_velocity *= 0.90
+
         self.update_voiture()
         self.envoyer_signal_graph()
         self.envoyer_vitesse()
@@ -99,14 +126,22 @@ class PhysiqueQtWidget(QWidget):
         epaisseur_visuelle = 20
         p.setBrush(QColor(100, 100, 100))
 
-        # Mur Haut
+        #Mur Haut
         p.drawRect(0, 0, self.W, epaisseur_visuelle)
-        # Mur Bas
+        #Mur Bas
         p.drawRect(0, self.H - epaisseur_visuelle, self.W, epaisseur_visuelle)
-        # Mur Gauche
+        #Mur Gauche
         p.drawRect(0, 0, epaisseur_visuelle, self.H)
-        # Mur Droit
+        #Mur Droit
         p.drawRect(self.W - epaisseur_visuelle, 0, epaisseur_visuelle, self.H)
+
+        # dessine les tonneaux
+        p.setBrush(QColor("brown"))
+        p.setPen(Qt.GlobalColor.black)
+        for tonneau in self.tonneaux:
+            pos = tonneau.position
+            p.drawEllipse(int(pos.x - 25), int(self.H - pos.y - 25), 50, 50)
+
 
         # dessine la voiture
         p.save()
