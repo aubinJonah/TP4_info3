@@ -1,13 +1,15 @@
 import math
 
 import pymunk
-from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtCore import QTimer, Qt, pyqtSignal
 from PyQt6.QtGui import QPixmap, QBrush, QPainter
 from PyQt6.QtWidgets import QWidget
 from pymunk import Vec2d
 
 
 class PhysiqueQtWidget(QWidget):
+
+    info_graph = pyqtSignal(int,int,int)
     def __init__(self):
         super().__init__()
         #permet de faire que les touche sont enregistrer meme si on n'a pas cliqué sur la simulation
@@ -59,9 +61,12 @@ class PhysiqueQtWidget(QWidget):
         self.body.velocity *= 0.95
         self.body.angular_velocity *= 0.90
         self.update_voiture()
+        self.envoyer_signal_graph()
         self.update()
 
-
+    def envoyer_signal_graph(self):
+        vitesse = self.body.velocity.length
+        self.info_graph.emit(self.body.position.x,self.body.postion.y,vitesse)
     def paintEvent(self, event):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
