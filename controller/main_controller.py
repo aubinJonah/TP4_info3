@@ -1,6 +1,6 @@
 from time import sleep
 
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtCore import QThread, pyqtSignal, Qt
 from PyQt6.QtWidgets import QColorDialog
 
 from model.model import Model
@@ -29,6 +29,8 @@ class MainController:
         self.worker = Worker(physique)
         self.temps = 0
         self.__dock = dock
+
+        self.ouvrir_carac()
 
 
         self.__view.layout.addWidget(self.__physique)
@@ -65,6 +67,7 @@ class MainController:
         self.__physique.update()
 
     def ouvrir_carac(self):
+        self.__view.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.__dock)
         self.__dock.show()
 
     def gestion_commencer(self):
@@ -114,9 +117,6 @@ class MainController:
         self.worker.temps_passer.connect(self.update_graph)
         self.worker.start()
 
-    def update_graph(self, position_x, position_y, vitesse):
-        # self.__canvas.borne_sup += 1
-        self.__canvas.draw_vitesse(vitesse)
 
 
 class Worker(QThread):

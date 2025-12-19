@@ -37,13 +37,20 @@ class PhysiqueQtWidget(QWidget):
         # Espace
         self.space = pymunk.Space()
         self.space.gravity = (0, 0)
-        # le mur
-        mur_y = 375
-        largeur = 25
-        mur = pymunk.Segment(self.space.static_body,(0, mur_y),(self.W, mur_y),largeur)
-        mur.elasticity = 0
-        mur.friction = 1.0
-        self.space.add(mur)
+        # les murs
+        static_body = self.space.static_body
+        epaisseur = 20
+        murs = [
+            pymunk.Segment(static_body, (0, 0), (self.W, 0), epaisseur),  # Bas
+            pymunk.Segment(static_body, (self.W, 0), (self.W, self.H), epaisseur),  # Droite
+            pymunk.Segment(static_body, (self.W, self.H), (0, self.H), epaisseur),  # Haut
+            pymunk.Segment(static_body, (0, self.H), (0, 0), epaisseur)  # Gauche
+        ]
+        for mur in murs:
+            mur.elasticity = 0
+            mur.friction = 1.0
+            self.space.add(mur)
+
         # la voiture
         mass = 1
         self.size = (100,50)
@@ -88,10 +95,19 @@ class PhysiqueQtWidget(QWidget):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        # dessine le mur
-        p.setBrush(Qt.GlobalColor.gray)
-        y_mur = (self.H - 375) - (50 / 2)
-        p.drawRect(0,int(y_mur),self.W,50)
+        #dessine les murs
+        epaisseur_visuelle = 20
+        p.setBrush(QColor(100, 100, 100))
+
+        # Mur Haut
+        p.drawRect(0, 0, self.W, epaisseur_visuelle)
+        # Mur Bas
+        p.drawRect(0, self.H - epaisseur_visuelle, self.W, epaisseur_visuelle)
+        # Mur Gauche
+        p.drawRect(0, 0, epaisseur_visuelle, self.H)
+        # Mur Droit
+        p.drawRect(self.W - epaisseur_visuelle, 0, epaisseur_visuelle, self.H)
+
         # dessine la voiture
         p.save()
         #on centre le canvas sur la voiture
@@ -150,7 +166,6 @@ class PhysiqueQtWidget(QWidget):
             self.Right_Key = False
 
     def moveCar(self,sens):
-
 
         if sens == "forward":
             self.body.apply_impulse_at_local_point((self.puissance,0), (0, 0))
