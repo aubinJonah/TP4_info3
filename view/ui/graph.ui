@@ -6,17 +6,43 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>550</width>
-    <height>415</height>
+    <width>848</width>
+    <height>569</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
     <item>
-     <layout class="QVBoxLayout" name="layout"/>
+     <layout class="QVBoxLayout" name="layout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QPushButton" name="VitesseButton">
+          <property name="text">
+           <string>Vitesse</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="AccelerationButton">
+          <property name="text">
+           <string>Accélération</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ForceButton">
+          <property name="text">
+           <string>Moment de force</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -25,8 +51,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>550</width>
-     <height>21</height>
+     <width>848</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>

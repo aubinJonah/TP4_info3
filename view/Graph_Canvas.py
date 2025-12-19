@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 
 
 class GraphCanvas(FigureCanvasQTAgg):
+    borne_inf = 0
+    borne_sup = 10
     def __init__(self):
         # Crée une figure matplotlib
         self.fig, self.ax = plt.subplots(figsize=(10, 10))
@@ -29,11 +31,18 @@ class GraphCanvas(FigureCanvasQTAgg):
 
     def draw_graph(self):
         self.ax.clear()
-        borne_inf = 0
-        borne_sup = 10
         # Trace la fonction
-        x = np.linspace(borne_inf, borne_sup, 100)
+        x = np.linspace(self.borne_inf, self.borne_sup, 100)
         y = np.sin(x)
+        self.ax.plot(x, y)
+
+        self.draw()
+
+    def draw_vitesse(self):
+        self.ax.clear()
+        # Trace la fonction
+        x = np.linspace(self.borne_inf, self.borne_sup, 100)
+        y = np.linspace(self.borne_inf, self.borne_sup, 100)
         self.ax.plot(x, y)
 
         self.draw()
