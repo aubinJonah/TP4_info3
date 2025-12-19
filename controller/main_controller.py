@@ -1,9 +1,9 @@
 from time import sleep
 
+import matplotlib.pyplot as plt
 from PyQt6.QtCore import QThread, pyqtSignal, Qt
 from PyQt6.QtWidgets import QColorDialog
 
-from model.model import Model
 from view.Dock_view import DockWindow
 from view.Graph_Canvas import GraphCanvas
 from view.Graph_View import GraphView
@@ -13,7 +13,6 @@ from view.PhysiqueWindow import PhysiqueQtWidget
 
 class MainController:
     __view: MainWindow
-    __model: Model
     __canvas: GraphCanvas
     __physique: PhysiqueQtWidget
     __graph_view: GraphView
@@ -22,9 +21,8 @@ class MainController:
     est_Vitesse = False
     est_Acceleration = False
 
-    def __init__(self, view, model, canvas, physique, graph_view, dock):
+    def __init__(self, view, canvas, physique, graph_view, dock):
         self.__view = view
-        self.__model = model
         self.__canvas = canvas
         self.__physique = physique
         self.__graph_view = graph_view
@@ -139,10 +137,15 @@ class MainController:
         self.est_Acceleration = False
         self.__graph_view.VitesseButton.setEnabled(False)
         self.__graph_view.AccelerationButton.setEnabled(True)
-
+        plt.xlabel("Temps écoulé en secondes")
+        plt.ylabel("Vitesse en Pixel/Seconde")
+        plt.title("Vitesse du véhicule selon le temps")
     def graphAcceleration(self):
         self.reset_graph()
         self.est_Vitesse = False
         self.est_Acceleration = True
         self.__graph_view.VitesseButton.setEnabled(True)
         self.__graph_view.AccelerationButton.setEnabled(False)
+        plt.xlabel("Temps écoulé en secondes")
+        plt.ylabel("Accélération en Pixel/Seconde carré")
+        plt.title("Accélération du véhicule selon le temps")

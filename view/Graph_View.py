@@ -11,7 +11,6 @@ class GraphView(QMainWindow):
     layout: QVBoxLayout
     VitesseButton:QPushButton
     AccelerationButton:QPushButton
-    ForceButton:QPushButton
     def __init__(self):
         super().__init__()
         if TYPE_CHECKING:
