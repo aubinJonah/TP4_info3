@@ -34,6 +34,8 @@ class MainController:
         self.__view.layout.addWidget(self.__physique)
         self.__graph_view.add_canvas(self.__canvas)
 
+        self.__view.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.__dock)
+
         self.__view.action_ajouter.triggered.connect(self.ajouter_graphique)
         # Bouton de gestion de la simulation
         self.__view.StartpushButton.clicked.connect(self.gestion_commencer)
