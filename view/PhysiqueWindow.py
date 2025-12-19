@@ -54,7 +54,7 @@ class PhysiqueQtWidget(QWidget):
         #les tonneaux
         self.tonneaux = []
 
-        # Ajouter quelques tonneaux à des positions précises
+        #Ajouter des tonneaux
         positions_tonneaux = [(150, 150), (450, 150), (300, 100)]
         for pos in positions_tonneaux:
             self.creer_tonneau(pos)
