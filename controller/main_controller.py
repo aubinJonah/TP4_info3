@@ -19,38 +19,37 @@ class MainController:
     __graph_view: GraphView
     __dock: DockWindow
 
+    est_Vitesse = False
+    est_Acceleration = False
 
-    def __init__(self, view, model, canvas, physique, graph_view,dock):
+    def __init__(self, view, model, canvas, physique, graph_view, dock):
         self.__view = view
         self.__model = model
         self.__canvas = canvas
         self.__physique = physique
         self.__graph_view = graph_view
-        self.worker = Worker(physique)
         self.temps = 0
         self.__dock = dock
-
-        self.ouvrir_carac()
-
 
         self.__view.layout.addWidget(self.__physique)
         self.__graph_view.add_canvas(self.__canvas)
 
         self.__view.action_ajouter.triggered.connect(self.ajouter_graphique)
-        self.__graph_view.VitesseButton.clicked.connect(self.lancer_thread)
-        #Bouton de gestion de la simulation
+        # Bouton de gestion de la simulation
         self.__view.StartpushButton.clicked.connect(self.gestion_commencer)
         self.__view.PausepushButton.clicked.connect(self.gestion_pause)
         self.__view.RedemarrerpushButton.clicked.connect(self.gestion_redemarrer)
-
-        #mettre a jour compteur de vitesse
+        # Bouton des choix de graphes
+        self.__graph_view.VitesseButton.clicked.connect(self.graphVitesse)
+        self.__graph_view.AccelerationButton.clicked.connect(self.graphAcceleration)
+        # mettre a jour compteur de vitesse
         self.__physique.vitesse_signal.connect(self.changement_vitesse)
 
-        #boutons pour changer les caractéristiques de la voiture
+        # boutons pour changer les caractéristiques de la voiture
         self.__view.actionCarac.triggered.connect(self.ouvrir_carac)
         self.__view.actionCouleur.triggered.connect(self.changement_de_couleur)
 
-        #caractéristiques voiture
+        # caractéristiques voiture
         self.__dock.SurfacecomboBox.currentIndexChanged.connect(self.update_carac)
         self.__dock.PoidshorizontalSlider.valueChanged.connect(self.update_carac)
         self.__dock.PuissancehorizontalSlider.valueChanged.connect(self.update_carac)
@@ -67,7 +66,6 @@ class MainController:
         self.__physique.update()
 
     def ouvrir_carac(self):
-        self.__view.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.__dock)
         self.__dock.show()
 
     def gestion_commencer(self):
@@ -88,19 +86,28 @@ class MainController:
         self.__view.RedemarrerpushButton.setEnabled(False)
         self.__physique.redemarrer_simulation()
 
-        self.__physique.info_graph.connect(self.update_graph)
+        self.reset_graph()
 
     def changement_vitesse(self, vitesse):
         self.__view.update_compteur_vitesse(vitesse)
+        self.gestion_donnees(vitesse)
 
-        self.ajouter_donnees(vitesse)
+    def gestion_donnees(self, donnees):
+        donnees_a_ajouter = 0
+        if self.est_Vitesse:
+            donnees_a_ajouter = donnees
+        elif self.est_Acceleration:
+            if self.__canvas.temps == []:
+                pass
+            else:
+                donnees_a_ajouter = donnees / self.__canvas.temps[len(self.__canvas.temps) - 1]
+        self.ajouter_donnees(donnees_a_ajouter)
         self.__canvas.line.set_xdata(self.__canvas.temps)
         self.__canvas.line.set_ydata(self.__canvas.donnees)
         self.__canvas.ax.set_xlim(min(self.__canvas.temps), max(self.__canvas.temps))
-        #self.__canvas.ax.set_ylim(min(self.__canvas.donnees), max(self.__canvas.donnees))
         self.__canvas.draw()
         self.__canvas.flush_events()
-        sleep(0.0002)
+        sleep(0.017)
 
     def ajouter_donnees(self, donnee_a_ajouter):
         self.temps += 0.017
@@ -113,27 +120,22 @@ class MainController:
     def ajouter_graphique(self):
         self.__graph_view.show()
 
-    def lancer_thread(self):
-        self.worker.temps_passer.connect(self.update_graph)
-        self.worker.start()
+    def reset_graph(self):
+        self.__canvas.temps.clear()
+        self.__canvas.donnees.clear()
+        self.__canvas.line, = self.__canvas.ax.plot(self.__canvas.temps, self.__canvas.donnees, "r")
 
 
+    def graphVitesse(self):
+        self.reset_graph()
+        self.est_Vitesse = True
+        self.est_Acceleration = False
+        self.__graph_view.VitesseButton.setEnabled(False)
+        self.__graph_view.AccelerationButton.setEnabled(True)
 
-class Worker(QThread):
-    temps_passer = pyqtSignal(int)
-    temps = 0
-    en_cours: bool
-    __physique: PhysiqueQtWidget
-
-    def __init__(self, physique):
-        super().__init__()
-        self.__physique = physique
-
-    def run(self):
-        # TODO
-        self.en_cours = True
-        while self.en_cours:
-            sleep(1)
-            # self.temps += 1
-            # self.temps_passer.emit(self.temps)
-            self.__physique.envoyer_signal_graph()
+    def graphAcceleration(self):
+        self.reset_graph()
+        self.est_Vitesse = False
+        self.est_Acceleration = True
+        self.__graph_view.VitesseButton.setEnabled(True)
+        self.__graph_view.AccelerationButton.setEnabled(False)

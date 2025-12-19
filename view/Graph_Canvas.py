@@ -15,8 +15,8 @@ if TYPE_CHECKING:
 class GraphCanvas(FigureCanvasQTAgg):
     borne_inf = 0
     borne_sup = 10
-    donnees = []
-    temps = []
+    donnees = [0]
+    temps = [0.017]
 
     def __init__(self):
         plt.ion()
