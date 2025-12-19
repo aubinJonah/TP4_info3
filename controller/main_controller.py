@@ -22,25 +22,34 @@ class MainController:
         self.__canvas = canvas
         self.__physique = physique
         self.__graph_view = graph_view
+        self.worker = Worker()
 
         self.__view.layout.addWidget(self.__physique)
         self.__graph_view.add_canvas(self.__canvas)
 
         self.__view.action_ajouter.triggered.connect(self.ajouter_graphique)
+        self.__graph_view.VitesseButton.clicked.connect(self.lancer_thread)
 
     def ajouter_graphique(self):
         self.__graph_view.show()
 
+    def lancer_thread(self):
+        self.worker.temps_passer.connect(self.update_graph)
+        self.worker.start()
+
+    def update_graph(self,temps):
+        self.__canvas.borne_sup += 1
+        self.__canvas.draw_vitesse()
+        print(f"temps écoulé : {temps}")
 
 class Worker(QThread):
     temps_passer = pyqtSignal(int)
-    def __init__(self, controller: MainController):
-        super().__init__()
-        self.__controller = controller
-        self.temps = 0
-
+    temps = 0
+    en_cours :bool
     def run(self):
-        #TODO
-        sleep(0.1)
-        self.temps_passer.emit(self.temps)
-
+        # TODO
+        self.en_cours = True
+        while self.en_cours:
+            sleep(1)
+            self.temps += 1
+            self.temps_passer.emit(self.temps)

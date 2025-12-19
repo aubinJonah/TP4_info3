@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QGridLayout, QVBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QGridLayout, QVBoxLayout, QPushButton
 from typing import TYPE_CHECKING
 
 from PyQt6.uic import loadUi
@@ -9,7 +9,9 @@ if TYPE_CHECKING:
 
 class GraphView(QMainWindow):
     layout: QVBoxLayout
-
+    VitesseButton:QPushButton
+    AccelerationButton:QPushButton
+    ForceButton:QPushButton
     def __init__(self):
         super().__init__()
         if TYPE_CHECKING:
@@ -20,4 +22,4 @@ class GraphView(QMainWindow):
         self.__controller = controller
 
     def add_canvas(self, canvas):
-        self.layout.addWidget(canvas)
+        self.layout.insertWidget(0,canvas)
