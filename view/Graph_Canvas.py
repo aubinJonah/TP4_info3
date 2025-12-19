@@ -15,11 +15,15 @@ if TYPE_CHECKING:
 class GraphCanvas(FigureCanvasQTAgg):
     borne_inf = 0
     borne_sup = 10
+    donnees = []
+    temps = []
+
     def __init__(self):
+        plt.ion()
         # Crée une figure matplotlib
         self.fig, self.ax = plt.subplots(figsize=(10, 10))
+        self.line, = self.ax.plot(self.temps, self.donnees, "r")
         super().__init__(self.fig)
-        self.draw_graph()
         if TYPE_CHECKING:
             self.__controller: MainController | None = None
         # Permet de faire fonctionner l'ecoute des touches dans un canvas
@@ -34,17 +38,27 @@ class GraphCanvas(FigureCanvasQTAgg):
         # Trace la fonction
         x = np.linspace(self.borne_inf, self.borne_sup, 100)
         y = np.sin(x)
-        self.ax.plot(x, y)
+        # self.ax.plot(x, y)
 
         self.draw()
 
-    def draw_vitesse(self):
+    def draw_vitesse(self, vitesse):
+        self.line, = self.ax.plot(self.temps, vitesse, "r")
+
         self.ax.clear()
         # Trace la fonction
-        x = np.linspace(self.borne_inf, self.borne_sup, 100)
-        y = np.linspace(self.borne_inf, self.borne_sup, 100)
-        self.ax.plot(x, y)
+        #x = np.linspace(self.borne_inf, self.borne_sup, 1)
+        #y = vitesse
+        #self.ax.plot(x, y)
+
+        while True:
+            self.__controller.ajouter_donnees()
+            self.line.set_xdata(self.temps)
+            self.line.set_ydata(self.donnees)
+            self.ax.set_xlim(min(self.temps),max(self.temps))
+            self.ax.set_ylim(min(self.donnees), max(self.donnees))
+            self.draw()
+            self.flush_events()
+            self.sleep(0.0002)
 
         self.draw()
-
-
