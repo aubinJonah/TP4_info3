@@ -21,8 +21,9 @@ class GraphCanvas(FigureCanvasQTAgg):
     def __init__(self):
         plt.ion()
         # Crée une figure matplotlib
-        self.fig, self.ax = plt.subplots(figsize=(10, 10))
+        self.fig, self.ax = plt.subplots(figsize=(20, 10))
         self.line, = self.ax.plot(self.temps, self.donnees, "r")
+        self.ax.set_ylim(0, 250)
         super().__init__(self.fig)
         if TYPE_CHECKING:
             self.__controller: MainController | None = None

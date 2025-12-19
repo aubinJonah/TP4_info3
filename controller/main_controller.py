@@ -94,15 +94,16 @@ class MainController:
         self.__canvas.line.set_xdata(self.__canvas.temps)
         self.__canvas.line.set_ydata(self.__canvas.donnees)
         self.__canvas.ax.set_xlim(min(self.__canvas.temps), max(self.__canvas.temps))
-        self.__canvas.ax.set_ylim(min(self.__canvas.donnees), max(self.__canvas.donnees))
+        #self.__canvas.ax.set_ylim(min(self.__canvas.donnees), max(self.__canvas.donnees))
         self.__canvas.draw()
         self.__canvas.flush_events()
         sleep(0.0002)
 
     def ajouter_donnees(self, donnee_a_ajouter):
-        self.__canvas.temps.append(self.temps + 0.017)
+        self.temps += 0.017
+        self.__canvas.temps.append(self.temps)
         self.__canvas.donnees.append(donnee_a_ajouter)
-        if len(self.__canvas.temps) > 50:
+        if len(self.__canvas.temps) > 100:
             self.__canvas.temps[:] = self.__canvas.temps[1:]
             self.__canvas.donnees[:] = self.__canvas.donnees[1:]
 
