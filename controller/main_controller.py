@@ -42,7 +42,7 @@ class MainController:
         self.__view.RedemarrerpushButton.clicked.connect(self.gestion_redemarrer)
 
         #mettre a jour compteur de vitesse
-        self.__physique.vitesse_signal.connect(self.__view.update_compteur_vitesse)
+        self.__physique.vitesse_signal.connect(self.changement_vitesse)
 
         #boutons pour changer les caractéristiques de la voiture
         self.__view.actionCarac.triggered.connect(self.ouvrir_carac)
