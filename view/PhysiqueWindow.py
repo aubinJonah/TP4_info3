@@ -66,7 +66,7 @@ class PhysiqueQtWidget(QWidget):
 
     def envoyer_signal_graph(self):
         vitesse = self.body.velocity.length
-        self.info_graph.emit(self.body.position.x,self.body.postion.y,vitesse)
+        self.info_graph.emit(self.body.position.x,self.body.position.y,vitesse)
     def paintEvent(self, event):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
