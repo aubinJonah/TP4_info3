@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QGridLayout
+from PyQt6.QtWidgets import QMainWindow, QGridLayout, QVBoxLayout
 from typing import TYPE_CHECKING
 
 from PyQt6.uic import loadUi
@@ -8,13 +8,13 @@ if TYPE_CHECKING:
 
 
 class GraphView(QMainWindow):
-    layout: QGridLayout
+    layout: QVBoxLayout
 
     def __init__(self):
         super().__init__()
         if TYPE_CHECKING:
             self.__controller: MainController | None = None
-        loadUi("ui/graph.ui",self)
+        loadUi("view/ui/graph.ui",self)
 
     def set_controller(self, controller):
         self.__controller = controller

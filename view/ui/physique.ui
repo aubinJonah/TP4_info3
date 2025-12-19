@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>550</width>
-    <height>415</height>
+    <width>445</width>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,12 +25,24 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>550</width>
+     <width>445</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuAjouter_Graphique">
+    <property name="title">
+     <string>Option Graphique</string>
+    </property>
+    <addaction name="action_ajouter"/>
+   </widget>
+   <addaction name="menuAjouter_Graphique"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_ajouter">
+   <property name="text">
+    <string>ajouter</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
