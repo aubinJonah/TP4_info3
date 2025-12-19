@@ -10,7 +10,8 @@ from pymunk import Vec2d
 class PhysiqueQtWidget(QWidget):
     def __init__(self):
         super().__init__()
-
+        #permet de faire que les touche sont enregistrer meme si on n'a pas cliqué sur la simulation
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.W, self.H = 600, 400
         self.Up_Key = False
         self.Down_Key = False
