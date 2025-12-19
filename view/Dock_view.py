@@ -12,4 +12,4 @@ class DockWindow(QDockWidget):
         super().__init__()
         loadUi("view/ui/caracteristiques.ui", self)
         self.setWindowTitle("Caracteristiques")
-        self.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea | Qt.DockWidgetArea.RightDockWidgetArea | Qt.DockWidgetArea.BottomDockWidgetArea)
+        self.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea | Qt.DockWidgetArea.RightDockWidgetArea )
