@@ -15,12 +15,16 @@ class MainWindow(QMainWindow):
     PausepushButton: QPushButton
     RedemarrerpushButton: QPushButton
     CompteurVitesse:QLabel
+    actionCarac:QAction
+    actionCouleur:QAction
+
     def __init__(self):
         super().__init__()
         self.resize(1000, 800)
         if TYPE_CHECKING:
             self.__controller: MainController | None = None
         loadUi("view/ui/physique.ui",self)
+
 
     def set_controller(self, controller):
         self.__controller = controller

@@ -90,12 +90,30 @@
     </property>
     <addaction name="action_ajouter"/>
    </widget>
+   <widget class="QMenu" name="menuPersonalisation_voiture">
+    <property name="title">
+     <string>Personalisation voiture</string>
+    </property>
+    <addaction name="actionCouleur"/>
+    <addaction name="actionCarac"/>
+   </widget>
    <addaction name="menuAjouter_Graphique"/>
+   <addaction name="menuPersonalisation_voiture"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_ajouter">
    <property name="text">
     <string>ajouter</string>
+   </property>
+  </action>
+  <action name="actionCouleur">
+   <property name="text">
+    <string>Couleur Voiture</string>
+   </property>
+  </action>
+  <action name="actionCarac">
+   <property name="text">
+    <string>Caractéristiques Voiture</string>
    </property>
   </action>
  </widget>

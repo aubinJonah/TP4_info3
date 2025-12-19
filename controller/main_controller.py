@@ -1,8 +1,10 @@
 from time import sleep
 
 from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtWidgets import QColorDialog
 
 from model.model import Model
+from view.Dock_view import DockWindow
 from view.Graph_Canvas import GraphCanvas
 from view.Graph_View import GraphView
 from view.MainWindow import MainWindow
@@ -15,14 +17,16 @@ class MainController:
     __canvas: GraphCanvas
     __physique: PhysiqueQtWidget
     __graph_view: GraphView
+    __dock: DockWindow
 
 
-    def __init__(self, view, model, canvas, physique, graph_view):
+    def __init__(self, view, model, canvas, physique, graph_view,dock):
         self.__view = view
         self.__model = model
         self.__canvas = canvas
         self.__physique = physique
         self.__graph_view = graph_view
+        self.__dock = dock
         self.worker = Worker()
 
         self.__view.layout.addWidget(self.__physique)
@@ -34,7 +38,32 @@ class MainController:
         self.__view.StartpushButton.clicked.connect(self.gestion_commencer)
         self.__view.PausepushButton.clicked.connect(self.gestion_pause)
         self.__view.RedemarrerpushButton.clicked.connect(self.gestion_redemarrer)
+
+        #mettre a jour compteur de vitesse
         self.__physique.vitesse_signal.connect(self.__view.update_compteur_vitesse)
+
+        #boutons pour changer les caractéristiques de la voiture
+        self.__view.actionCarac.triggered.connect(self.ouvrir_carac)
+        self.__view.actionCouleur.triggered.connect(self.changement_de_couleur)
+
+        #caractéristiques voiture
+        self.__dock.SurfacecomboBox.currentIndexChanged.connect(self.update_carac)
+        self.__dock.PoidshorizontalSlider.valueChanged.connect(self.update_carac)
+        self.__dock.PuissancehorizontalSlider.valueChanged.connect(self.update_carac)
+
+    def update_carac(self):
+        poid = self.__dock.PoidshorizontalSlider.value()
+        surface = self.__dock.SurfacecomboBox.currentIndex()
+        puissance = self.__dock.PuissancehorizontalSlider.value()
+        self.__physique.update_carac(poid, surface, puissance)
+
+    def changement_de_couleur(self):
+        couleur = QColorDialog.getColor(self.__physique.couleur, self.__view, "Choisir la couleur de la voiture")
+        self.__physique.couleur = couleur
+        self.__physique.update()
+
+    def ouvrir_carac(self):
+        self.__dock.show()
 
     def gestion_commencer(self):
         self.__view.StartpushButton.setEnabled(False)

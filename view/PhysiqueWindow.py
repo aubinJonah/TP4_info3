@@ -2,7 +2,7 @@ import math
 
 import pymunk
 from PyQt6.QtCore import QTimer, Qt, pyqtSignal
-from PyQt6.QtGui import QPixmap, QBrush, QPainter
+from PyQt6.QtGui import QPixmap, QBrush, QPainter, QColor
 from PyQt6.QtWidgets import QWidget
 from pymunk import Vec2d
 
@@ -13,6 +13,9 @@ class PhysiqueQtWidget(QWidget):
     vitesse_signal = pyqtSignal(float)
     def __init__(self):
         super().__init__()
+        self.couleur = QColor("red")
+        self.surface = 0.95
+        self.puissance = 20
         #permet de faire que les touche sont enregistrer meme si on n'a pas cliqué sur la simulation
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         #La simulation commence en pause
@@ -44,7 +47,8 @@ class PhysiqueQtWidget(QWidget):
         # la voiture
         mass = 1
         self.size = (100,50)
-        self.body = pymunk.Body(mass, pymunk.moment_for_box(mass, self.size))
+        self.moment = pymunk.moment_for_box(mass, self.size)
+        self.body = pymunk.Body(mass, self.moment)
         self.body.position = (300, 200)
         self.angle = -math.degrees(self.body.angle)
         shape = pymunk.Poly.create_box(self.body,self.size)
@@ -65,15 +69,17 @@ class PhysiqueQtWidget(QWidget):
         if self.body.velocity.length > vitesse_max:
             self.body.velocity = self.body.velocity.normalized() * vitesse_max
         #simule la friction de l'air sur la voiture et diminiue la vitesse de celle-ci pour chaque mise à jour
-        self.body.velocity *= 0.95
+        self.body.velocity *= self.surface
         self.body.angular_velocity *= 0.90
         self.update_voiture()
         self.envoyer_signal_graph()
         self.envoyer_vitesse()
         self.update()
+
     def envoyer_vitesse(self):
         vitesse = self.body.velocity.length
         self.vitesse_signal.emit(vitesse)
+
     def envoyer_signal_graph(self):
         vitesse = self.body.velocity.length
         self.info_graph.emit(self.body.position.x,self.body.position.y,vitesse)
@@ -96,7 +102,7 @@ class PhysiqueQtWidget(QWidget):
 
 
         largeur, hauteur = self.size
-        p.setBrush(Qt.GlobalColor.red)
+        p.setBrush(self.couleur)
         p.drawRect(int(-largeur/2), int(-hauteur/2),self.size[0],self.size[1])
 
         p.setBrush(Qt.GlobalColor.yellow)
@@ -145,12 +151,11 @@ class PhysiqueQtWidget(QWidget):
 
     def moveCar(self,sens):
 
-        vitesse = 20
 
         if sens == "forward":
-            self.body.apply_impulse_at_local_point((vitesse,0), (0, 0))
+            self.body.apply_impulse_at_local_point((self.puissance,0), (0, 0))
         else:
-            self.body.apply_impulse_at_local_point((-(vitesse/2),0), (0, 0))
+            self.body.apply_impulse_at_local_point((-(self.puissance/2),0), (0, 0))
 
     def rotate_car(self,sens):
         vitesse_rotation = 2.0
@@ -171,3 +176,16 @@ class PhysiqueQtWidget(QWidget):
         self.update()
         self.envoyer_vitesse()
         self.envoyer_signal_graph()
+
+    def update_carac(self,poid,surface,puissance):
+        self.body.mass = poid
+        self.body.moment = pymunk.moment_for_box(poid, self.size)
+        if surface == 0:
+            self.surface = 0.95
+        elif surface == 1:
+            self.surface = 0.99
+        elif surface == 2:
+            self.surface = 0.80
+
+        self.puissance = puissance
+        self.update()
