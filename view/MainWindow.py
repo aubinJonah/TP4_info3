@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QGridLayout, QVBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QGridLayout, QVBoxLayout, QPushButton, QLabel
 from PyQt6.uic import loadUi
 
 if TYPE_CHECKING:
@@ -11,6 +11,10 @@ if TYPE_CHECKING:
 class MainWindow(QMainWindow):
     layout:QVBoxLayout
     action_ajouter:QAction
+    StartpushButton: QPushButton
+    PausepushButton: QPushButton
+    RedemarrerpushButton: QPushButton
+    CompteurVitesse:QLabel
     def __init__(self):
         super().__init__()
         self.resize(1000, 800)
@@ -20,3 +24,6 @@ class MainWindow(QMainWindow):
 
     def set_controller(self, controller):
         self.__controller = controller
+
+    def update_compteur_vitesse(self,vitesse):
+        self.CompteurVitesse.setText(f"Vitesse : {vitesse:.2f} px/s")

@@ -9,11 +9,14 @@ from pymunk import Vec2d
 
 class PhysiqueQtWidget(QWidget):
 
-    info_graph = pyqtSignal(int,int,int)
+    info_graph = pyqtSignal(float,float,float)
+    vitesse_signal = pyqtSignal(float)
     def __init__(self):
         super().__init__()
         #permet de faire que les touche sont enregistrer meme si on n'a pas cliqué sur la simulation
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        #La simulation commence en pause
+        self.en_pause = True
         self.W, self.H = 600, 400
         self.Up_Key = False
         self.Down_Key = False
@@ -50,6 +53,10 @@ class PhysiqueQtWidget(QWidget):
 
 
     def update_simulation(self):
+
+        if self.en_pause:
+            return
+
         dt = 1 / 60
 
         self.space.step(dt)
@@ -62,11 +69,15 @@ class PhysiqueQtWidget(QWidget):
         self.body.angular_velocity *= 0.90
         self.update_voiture()
         self.envoyer_signal_graph()
+        self.envoyer_vitesse()
         self.update()
-
+    def envoyer_vitesse(self):
+        vitesse = self.body.velocity.length
+        self.vitesse_signal.emit(vitesse)
     def envoyer_signal_graph(self):
         vitesse = self.body.velocity.length
         self.info_graph.emit(self.body.position.x,self.body.position.y,vitesse)
+
     def paintEvent(self, event):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -147,3 +158,16 @@ class PhysiqueQtWidget(QWidget):
             self.body.angular_velocity = vitesse_rotation
         if sens == "right":
             self.body.angular_velocity = -vitesse_rotation
+
+    def mettre_en_pause(self):
+        self.en_pause = not self.en_pause
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        return self.en_pause
+
+    def redemarrer_simulation(self):
+        self.Up_Key = self.Down_Key = self.Left_Key = self.Right_Key = False
+        self.en_pause = True
+        self.init_simulation()
+        self.update()
+        self.envoyer_vitesse()
+        self.envoyer_signal_graph()

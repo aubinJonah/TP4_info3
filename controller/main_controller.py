@@ -16,6 +16,7 @@ class MainController:
     __physique: PhysiqueQtWidget
     __graph_view: GraphView
 
+
     def __init__(self, view, model, canvas, physique, graph_view):
         self.__view = view
         self.__model = model
@@ -29,6 +30,29 @@ class MainController:
 
         self.__view.action_ajouter.triggered.connect(self.ajouter_graphique)
         self.__graph_view.VitesseButton.clicked.connect(self.lancer_thread)
+        #Bouton de gestion de la simulation
+        self.__view.StartpushButton.clicked.connect(self.gestion_commencer)
+        self.__view.PausepushButton.clicked.connect(self.gestion_pause)
+        self.__view.RedemarrerpushButton.clicked.connect(self.gestion_redemarrer)
+        self.__physique.vitesse_signal.connect(self.__view.update_compteur_vitesse)
+
+    def gestion_commencer(self):
+        self.__view.StartpushButton.setEnabled(False)
+        self.__view.PausepushButton.setEnabled(True)
+        self.__view.RedemarrerpushButton.setEnabled(True)
+        self.__physique.mettre_en_pause()
+
+    def gestion_pause(self):
+        self.__view.StartpushButton.setEnabled(True)
+        self.__view.PausepushButton.setEnabled(False)
+        self.__view.RedemarrerpushButton.setEnabled(True)
+        self.__physique.mettre_en_pause()
+
+    def gestion_redemarrer(self):
+        self.__view.StartpushButton.setEnabled(True)
+        self.__view.PausepushButton.setEnabled(False)
+        self.__view.RedemarrerpushButton.setEnabled(False)
+        self.__physique.redemarrer_simulation()
 
     def ajouter_graphique(self):
         self.__graph_view.show()
